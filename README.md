@@ -1,5 +1,5 @@
 # OTUS.Lesson8. ZFS
-Для работы нам понадобится роль ansible-zfs (https://github.com/mrlesmithjr/ansible-zfs)
+Для работы нам понадобится роль ansible-zfs (https://github.com/mrlesmithjr/ansible-zfs)  
 Скачать и добавить в директорию role нашего проекта
 
 Тестовый стенд: 4CPU, 4Gb RAM, HDD1 40G, HDD2-9 512M, OS Debian12
