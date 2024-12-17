@@ -2,7 +2,7 @@
 Для работы нам понадобится роль ansible-zfs (https://github.com/mrlesmithjr/ansible-zfs)  
 Скачать и добавить в директорию role нашего проекта
 
-Тестовый стенд: 4CPU, 4Gb RAM, HDD1 40G, HDD2-9 512M, OS Debian12
+Тестовый стенд: 4CPU, 4Gb RAM, HDD1 40G, HDD2-9 512M, OS Debian12  
 Структура разделов 
 
 pz@LVM:~$ lsblk 
