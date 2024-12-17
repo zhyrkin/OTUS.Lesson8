@@ -7,20 +7,20 @@
 
 pz@LVM:~$ lsblk 
 NAME               MAJ:MIN RM  SIZE RO TYPE MOUNTPOINTS  
-sda                  8:0    0   40G  0 disk 
-├─sda1               8:1    0  487M  0 part /boot
-├─sda2               8:2    0    1K  0 part 
-└─sda5               8:5    0 39.5G  0 part 
-  ├─LVM--vg-root   254:0    0 38.5G  0 lvm  /
-  └─LVM--vg-swap_1 254:1    0  976M  0 lvm  [SWAP]
-sdb                  8:16   0  512M  0 disk 
-sdc                  8:32   0  512M  0 disk 
-sdd                  8:48   0  512M  0 disk 
-sde                  8:64   0  512M  0 disk 
-sdf                  8:80   0  512M  0 disk 
-sdg                  8:96   0  512M  0 disk 
-sdh                  8:112  0  512M  0 disk 
-sdi                  8:128  0  512M  0 disk 
+sda                  8:0    0   40G  0 disk   
+├─sda1               8:1    0  487M  0 part /boot  
+├─sda2               8:2    0    1K  0 part   
+└─sda5               8:5    0 39.5G  0 part   
+  ├─LVM--vg-root   254:0    0 38.5G  0 lvm  /  
+  └─LVM--vg-swap_1 254:1    0  976M  0 lvm  [SWAP]  
+sdb                  8:16   0  512M  0 disk   
+sdc                  8:32   0  512M  0 disk   
+sdd                  8:48   0  512M  0 disk   
+sde                  8:64   0  512M  0 disk   
+sdf                  8:80   0  512M  0 disk   
+sdg                  8:96   0  512M  0 disk   
+sdh                  8:112  0  512M  0 disk   
+sdi                  8:128  0  512M  0 disk   
 
 Задания:
 Определить алгоритм с наилучшим сжатием:
