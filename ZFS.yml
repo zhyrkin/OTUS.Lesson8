@@ -1,0 +1,155 @@
+- name: Lesson 8. ZFS. Определение алгоритма с наилучшим сжатием
+  hosts: zfs
+  gather_facts: true
+  become: true
+  become_user: root
+  become_method: sudo
+  vars:
+    zfs_create_pools: true
+    zfs_pools:
+      - name: 'otus1'
+        action: 'create'   
+        type: 'mirror'
+        devices:
+          - /dev/sdb
+          - /dev/sdc
+        state: 'present'
+        compression: lzjb
+      - name: 'otus2'
+        action: 'create'   
+        type: 'mirror'
+        devices:
+          - /dev/sdd
+          - /dev/sde
+        state: 'present'
+        compression: lz4
+      - name: 'otus3'
+        action: 'create'   
+        type: 'mirror'
+        devices:
+          - /dev/sdf
+          - /dev/sdg
+        state: 'present'
+        compression: gzip
+      - name: 'otus4'
+        action: 'create'   
+        type: 'mirror'
+        devices:
+          - /dev/sdh
+          - /dev/sdi
+        state: 'present'
+        compression: zle
+  roles:
+    - role: ansible-zfs
+
+  post_tasks:
+    - name: Get test files
+      ansible.builtin.get_url:
+        url: https://gutenberg.org/cache/epub/2600/pg2600.converter.log
+        dest: /{{ item.name }}
+      loop: '{{ zfs_pools }}'
+    
+    - name: Register zfs pool list
+      ansible.builtin.shell: "zpool list"
+      register: zpool_list
+
+    - name: Register zfs compression
+      ansible.builtin.shell: "zfs get all | grep compressratio | grep -v ref"
+      register: zpool_compres       
+
+    - name: Show zfs pool list
+      debug: 
+        msg: '{{ zpool_list  }}'
+    - name: show zfs compression
+      debug:
+        msg: '{{ zpool_compres  }}'
+
+- name: Lesson 8. ZFS. Определение настроек пула
+  hosts: zfs
+  gather_facts: false
+  become: true
+  become_user: root
+  become_method: sudo
+
+  tasks:
+    - name: Get test file
+      ansible.builtin.get_url:
+        url: 'https://drive.usercontent.google.com/download?id=1MvrcEp-WgAQe57aDEzxSRalPAwbNN1Bb&export=download' 
+        dest: ~/archive.tar.gz
+    - name: Extract file
+      ansible.builtin.unarchive:
+        src: ~/archive.tar.gz
+        dest: ~/
+        remote_src: yes
+    - name: import pool
+      ansible.builtin.shell: 'zpool import -d zpoolexport/ otus'
+    
+    - name: register otus parameters
+      ansible.builtin.shell: 'zpool get all otus'
+      register: otus_parameters
+    
+    - name: register otus available
+      ansible.builtin.shell: 'zfs get available otus'
+      register: otus_available
+
+    - name: register otus type
+      ansible.builtin.shell: 'zfs get type otus'
+      register: otus_type 
+    
+    - name: register otus recordsize  
+      ansible.builtin.shell: 'zfs get recordsize otus'
+      register: otus_recordsize
+
+    - name: register otus compression  
+      ansible.builtin.shell: 'zfs get compression otus'
+      register: otus_compression
+
+    - name: register otus checksum  
+      ansible.builtin.shell: 'zfs get checksum otus'
+      register: otus_checksum
+
+    - name: Show all parameters
+      debug:
+        msg: '{{ otus_parameters.stdout_lines }} '    
+    
+    - name: Show register otus parameters
+      debug:
+        msg: 
+          '{{otus_available.stdout}}
+          {{otus_type.stdout}}
+          {{otus_recordsize.stdout}}
+          {{otus_compression.stdout}}
+          {{otus_checksum.stdout}}'
+
+- name: Lesson 8. ZFS. абота со снапшотом, поиск сообщения от преподавателя
+  hosts: zfs
+  gather_facts: false
+  become: true
+  become_user: root
+  become_method: sudo
+  
+  tasks:
+  - name: Get test file
+    ansible.builtin.get_url:
+      url: 'https://drive.usercontent.google.com/download?id=1wgxjih8YZ-cqLqaZVa0lA3h3Y029c3oI&export=download' 
+      dest: ~/otus_task2.file
+  
+  - name: Restoring the file system from a snapshot
+    ansible.builtin.shell: 'zfs receive otus/test@today < otus_task2.file'
+  
+  - name: Find secret message
+    ansible.builtin.find:
+      paths: /otus/test
+      file_type: file
+      patterns: 'secret_message'
+      use_regex: true
+      recurse: true
+    register: files
+  
+  - name: cat file
+    ansible.builtin.shell: "cat {{files.files[0].path }}"
+    register: cat_file
+  
+  - name: show secret file
+    debug: 
+      msg: '{{ cat_file.stdout_lines }}'
